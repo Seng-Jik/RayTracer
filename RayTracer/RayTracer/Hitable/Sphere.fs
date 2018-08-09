@@ -2,10 +2,12 @@
 open Globals
 open Ray
 open System
+open System.Collections
+
 
 type Sphere(center:Vec3,radius:float) =
     interface IHitable with
-        member this.Hit(ray:Ray) =
+        member this.Hit(ray:Ray,tmin:float,tmax:float) : HitRecord option=
             let oc = ray.Orginal - center
             let a = Vec3.Dot(ray.Direction,ray.Direction)
             let b = 2.0 * Vec3.Dot(oc,ray.Direction)
@@ -20,7 +22,7 @@ type Sphere(center:Vec3,radius:float) =
                 let t = (t1,t2)
 
                 match t with
-                | (t1,_) when t1 > 0.0 ->
+                | (t1,_) when t1 > tmin && t1 < tmax ->
                     let position = ray.GetPoint(t1)
                     let normal = (position - center).Normalized()
 
@@ -29,7 +31,7 @@ type Sphere(center:Vec3,radius:float) =
                             Position = position
                             Color = 0.5 * (normal+Vec3.One)
                             RayT = t1 })
-                | (_,t2) when t2.Force() > 0.0 ->
+                | (_,t2) when t2.Force() > tmin && t2.Force() < tmax ->
                     let position = ray.GetPoint(t2.Force())
                     let normal = (position - center).Normalized()
 

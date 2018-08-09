@@ -3,4 +3,4 @@
 open Ray
 
 type IHitable = 
-    abstract member Hit : Ray -> HitRecord option
+    abstract member Hit : Ray * float * float -> HitRecord option
