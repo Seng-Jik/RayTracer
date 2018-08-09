@@ -11,9 +11,3 @@ type Ray(org:Vec3,dir:Vec3) =
     member this.DirectionNorm with get() = dirNorm
     member this.Orginal with get() = org
     member this.Direction with get() = dir
-
-type HitRecord = {
-    Normal : Vec3 
-    Color : Vec3
-    Position : Vec3
-    RayT : float }

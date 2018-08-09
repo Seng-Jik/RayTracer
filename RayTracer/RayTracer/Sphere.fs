@@ -29,7 +29,6 @@ type Sphere(center:Vec3,radius:float) =
                     Some({  
                             Normal = normal
                             Position = position
-                            Color = 0.5 * (normal+Vec3.One)
                             RayT = t1 })
                 | (_,t2) when t2.Force() > tmin && t2.Force() < tmax ->
                     let position = ray.GetPoint(t2.Force())
@@ -38,6 +37,5 @@ type Sphere(center:Vec3,radius:float) =
                     Some({   
                             Normal = normal
                             Position = position
-                            Color = 0.5 * (normal+Vec3.One)
                             RayT = t2.Force() })
                 | _ -> None
