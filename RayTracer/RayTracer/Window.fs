@@ -44,7 +44,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : IHitable lis
                                     orginal,
                                     lowLeftCorner + 
                                         horizontal * xTrace + vertical * yTrace)
-                            col <- col + colWeigth * Tracer.Trace ray objs
+                            col <- col + colWeigth * Tracer.GetScreenColor ray objs
             
                         mtx.WaitOne() |> ignore
                         image.SetPixel(x,y,Vec3ToDrawingColor col)

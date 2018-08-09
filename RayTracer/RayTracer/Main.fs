@@ -12,7 +12,7 @@ let hitableList : IHitable list = [
     Sphere(Vec3(0.0,0.0,-1.0),0.5)
     Sphere(Vec3(0.0,-100.0,-1.),100.0)]
 
-let image = hitableList |> CreateImageForTestRay (Drawing.Size(width,height)) 1
+let image = hitableList |> CreateImageForTestRay (Drawing.Size(width,height)) 100
 
 Window.DisplayImage image
 
