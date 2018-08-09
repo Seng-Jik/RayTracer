@@ -17,5 +17,5 @@ let rec GetDiffuseColor (ray:Ray) (objs:IHitable list) : Vec3 =
     | Some(record) -> 
         let target = record.Position + record.Normal + GetDiffuseDirection()
         0.5 * GetDiffuseColor (Ray(record.Position,target - record.Position)) objs
-        //Vec3(rand.NextDouble(),rand.NextDouble(),rand.NextDouble())
+
     | None -> Background ray

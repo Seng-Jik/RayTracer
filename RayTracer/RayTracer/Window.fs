@@ -5,13 +5,12 @@ open System
 open Globals
 open Hitable
 open Ray
-open Tracer
+
+let Gamma (col:Vec3) = 
+    Vec3(Math.Sqrt(col.X),Math.Sqrt(col.Y),Math.Sqrt(col.Z))
 
 
 let GetScreenColor (ray:Ray) (objs:IHitable list) =
-    (*match Trace ray 0.0001 System.Double.MaxValue objs with
-    | Some(r) -> r.Color
-    | None -> Background ray*)
     Diffuse.GetDiffuseColor ray objs
 
 let DisplayImage (image:Drawing.Image) = 
@@ -55,7 +54,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : IHitable lis
                             col <- col + colWeigth * GetScreenColor ray objs
             
                         mtx.WaitOne() |> ignore
-                        image.SetPixel(x,y,Vec3ToDrawingColor col)
+                        image.SetPixel(x,y,col |> Gamma |> Vec3ToDrawingColor)
                         mtx.ReleaseMutex()
                 })
         let asyncs = Async.Parallel parallelSeq
