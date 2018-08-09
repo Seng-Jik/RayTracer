@@ -5,6 +5,14 @@ open System
 open Globals
 open Hitable
 open Ray
+open Tracer
+
+
+let GetScreenColor (ray:Ray) (objs:IHitable list) =
+    (*match Trace ray 0.0001 System.Double.MaxValue objs with
+    | Some(r) -> r.Color
+    | None -> Background ray*)
+    Diffuse.GetDiffuseColor ray objs
 
 let DisplayImage (image:Drawing.Image) = 
     use window = new Form()
@@ -29,7 +37,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : IHitable lis
     async{
         let parallelSeq = Seq.init size.Height (fun y ->
             async {
-                let random = Random(y)
+                let random = System.Random(y)
                 for x in seq{0..size.Width - 1} do
                         let xNorm = float x / float size.Width
                         let yNorm = 1.0 - float y / float size.Height
@@ -44,7 +52,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : IHitable lis
                                     orginal,
                                     lowLeftCorner + 
                                         horizontal * xTrace + vertical * yTrace)
-                            col <- col + colWeigth * Tracer.GetScreenColor ray objs
+                            col <- col + colWeigth * GetScreenColor ray objs
             
                         mtx.WaitOne() |> ignore
                         image.SetPixel(x,y,Vec3ToDrawingColor col)

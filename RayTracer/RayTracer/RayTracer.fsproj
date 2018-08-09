@@ -55,17 +55,18 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Global.fs" />
-    <Compile Include="Ray.fs" />
-    <Compile Include="Hitable\Hitable.fs" />
-    <Compile Include="Hitable\Sphere.fs" />
-    <Compile Include="Tracer.fs" />
-    <Compile Include="Window.fs" />
-    <Compile Include="Main.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />
     <Content Include="OpenTK.dll.config" />
+    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Global.fs" />
+    <Compile Include="Ray.fs" />
+    <Compile Include="Hitable.fs" />
+    <Compile Include="Tracer.fs" />
+    <Compile Include="Diffuse.fs" />
+    <Compile Include="Window.fs" />
+    <Compile Include="Sphere.fs" />
+    <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

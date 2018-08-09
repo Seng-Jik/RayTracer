@@ -8,8 +8,6 @@ let Clamp min max x =
     | x when x > max -> max
     | _ -> x
 
-
-
 let Vec3ToDrawingColor (col : Vec3) =
     let (r,g,b) = (col.X * 255.,col.Y*255.,col.Z*255.)
     let clamp x = Clamp 0.0 255. x
