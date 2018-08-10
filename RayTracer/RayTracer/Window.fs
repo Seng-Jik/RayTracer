@@ -20,7 +20,7 @@ let DisplayImage (image:Drawing.Image) =
     window.BackgroundImage <- image
     window.ShowDialog() |> ignore
 
-let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : (IHitable*IMaterial) list) : Drawing.Image = 
+let CreateImageForTestRay (size : Drawing.Size) (spp : int) (camera:Camera) (objs : (IHitable*IMaterial) list)  : Drawing.Image = 
     let lowLeftCorner = Vec3(-2.0,-1.0,-1.0)
     let horizontal = Vec3(4.0,0.0,0.0)
     let vertical = Vec3(0.0,2.0,0.0)
@@ -33,7 +33,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : (IHitable*IM
 
     let colWeigth = 1.0 / float spp
 
-    let camera = Camera(Vec3(2.0,1.0,-1.0),Vec3(1.0,0.0,-1.0),Vec3(0.0,1.0,0.0),75.0,(float size.Width/float size.Height))
+    
 
 
     async{

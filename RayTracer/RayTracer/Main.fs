@@ -5,6 +5,7 @@ open Globals
 open Hitable
 open Window
 open Material
+open Camera
 
 
 let (width,height) = (128*6,72*5)
@@ -16,7 +17,11 @@ let hitableList : (IHitable*IMaterial) list = [
     
     (Sphere(Vec3(0.0,-100.5,-1.),100.0) :> IHitable,Lambertian(Vec3(0.8,0.8,0.0)) :> IMaterial)]
 
-let image = hitableList |> CreateImageForTestRay (Drawing.Size(width,height)) 100
+let from = Vec3(0.0, 3.0, 3.0);
+let lookat = Vec3(0.0, 0.0, -1.0);
+let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),(from - lookat).Length)
+
+let image = hitableList |> CreateImageForTestRay (Drawing.Size(width,height)) 100 camera
 
 Window.DisplayImage image
 
