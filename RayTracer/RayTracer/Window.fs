@@ -7,6 +7,7 @@ open Hitable
 open Ray
 open Material
 open Tracer
+open Camera
 
 
 let Gamma (col:Vec3) = 
@@ -32,6 +33,9 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : (IHitable*IM
 
     let colWeigth = 1.0 / float spp
 
+    let camera = Camera(Vec3(-2.0,1.0,-1.0),Vec3(-1.0,0.0,-1.0),Vec3(0.0,1.0,0.0),75.0,(float size.Width/float size.Height))
+
+
     async{
         let parallelSeq = Seq.init size.Height (fun y ->
             async {
@@ -46,10 +50,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : (IHitable*IM
                             let xTrace = xNorm + random.NextDouble() * xRecip
                             let yTrace = yNorm + random.NextDouble() * yRecip
                             let ray =
-                                Ray(
-                                    orginal,
-                                    lowLeftCorner + 
-                                        horizontal * xTrace + vertical * yTrace)
+                                camera.CreateRay(xTrace,yTrace)
                             col <- col + colWeigth * GetScreenColor ray objs 0 5
             
                         mtx.WaitOne() |> ignore

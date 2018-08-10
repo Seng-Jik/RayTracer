@@ -16,32 +16,14 @@ let Background (ray:Ray) =
 
 let Trace (ray : Ray) (tmin:float) (tmax:float) (objs : (IHitable*IMaterial) list) : TraceRecord option =
     let mutable closest = tmax
-    let hited = objs 
-                |> List.map (fun hitable -> 
-                    let (obj,mat) = hitable
-                    let record = obj.Hit(ray,tmin,closest)
-                    if record.IsSome then
-                        closest <- record.Value.RayT
-                    (record,mat))
-                |> List.filter (fun traceRecord -> 
-                    let (record,_) = traceRecord
-                    record.IsSome)
-                |> List.map (fun traceRecord -> 
-                    let (record,mat) = traceRecord
-                    (record.Value,mat))
-
-    let closest = match hited with
-                    | [] -> None
-                    | hited ->
-                        Some(hited
-                            |> List.reduce (fun xr yr ->
-                                let (x,_) = xr
-                                let (y,_) = yr
-                                if x.RayT <= y.RayT then yr else xr))
-    
-    match closest with
-    | None -> None
-    | Some(a,b) -> Some({ HitRecord = a;Material = b })
+    let mutable record : TraceRecord option = None
+    for (hitable,mat) in objs do
+        match hitable.Hit(ray,tmin,closest) with
+        | Some(hitRecord) -> 
+            closest <- hitRecord.RayT
+            record <- Some({HitRecord=hitRecord;Material=mat})
+        | None -> ()
+    record
 
 let rec GetScreenColor (ray:Ray) (objs:(IHitable*IMaterial) list) depth maxDepth : Vec3 =
     match Trace ray 0.0000001 Double.MaxValue objs with
