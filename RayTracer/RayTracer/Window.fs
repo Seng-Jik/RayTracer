@@ -33,7 +33,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : (IHitable*IM
 
     let colWeigth = 1.0 / float spp
 
-    let camera = Camera(Vec3(-2.0,1.0,-1.0),Vec3(-1.0,0.0,-1.0),Vec3(0.0,1.0,0.0),75.0,(float size.Width/float size.Height))
+    let camera = Camera(Vec3(2.0,1.0,-1.0),Vec3(1.0,0.0,-1.0),Vec3(0.0,1.0,0.0),75.0,(float size.Width/float size.Height))
 
 
     async{
