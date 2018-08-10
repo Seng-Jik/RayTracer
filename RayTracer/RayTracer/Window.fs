@@ -36,7 +36,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (camera:Camera) (obj
 
     let colWeigth = 1.0 / float spp
 
-    
+    let mutable renderedPixel = 0;
 
 
     async{
@@ -58,6 +58,8 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (camera:Camera) (obj
             
                         mtx.WaitOne() |> ignore
                         image.SetPixel(x,y,col |> Gamma |> Vec3ToDrawingColor)
+                        renderedPixel <- renderedPixel + 1
+                        printfn "Renderered Pixel:%A     Percent:%A" renderedPixel (float renderedPixel / float (size.Width*size.Height))
                         mtx.ReleaseMutex()
                 })
         let asyncs = Async.Parallel parallelSeq
