@@ -12,19 +12,6 @@ open Tracer
 let Gamma (col:Vec3) = 
     Vec3(Math.Sqrt(col.X),Math.Sqrt(col.Y),Math.Sqrt(col.Z))
 
-
-let rec GetScreenColor (ray:Ray) (objs:(IHitable*IMaterial) list) depth maxDepth =
-    match Trace ray 0.0000001 Double.MaxValue objs with
-    | Some(record) -> 
-        let scattered = record.Material.Scatter(ray,record.HitRecord,Vec3(0.0,0.0,0.0))
-        match depth with
-        | x when x >= maxDepth -> Vec3(0.0,0.0,0.0)
-        | _ -> 
-            let (ray,atten) = scattered
-            let col = GetScreenColor ray.Value objs (depth+1) maxDepth
-            Vec3(col.X * atten.X,col.Y * atten.Y,col.Z * atten.Z)
-    | None -> Background ray
-
 let DisplayImage (image:Drawing.Image) = 
     use window = new Form()
     window.Size <- image.Size
@@ -63,7 +50,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : (IHitable*IM
                                     orginal,
                                     lowLeftCorner + 
                                         horizontal * xTrace + vertical * yTrace)
-                            col <- col + colWeigth * GetScreenColor ray objs 0 100
+                            col <- col + colWeigth * GetScreenColor ray objs 0 5
             
                         mtx.WaitOne() |> ignore
                         image.SetPixel(x,y,col |> Gamma |> Vec3ToDrawingColor)

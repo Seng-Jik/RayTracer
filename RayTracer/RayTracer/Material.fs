@@ -5,4 +5,4 @@ open Hitable
 open Globals
 
 type IMaterial = 
-    abstract member Scatter : Ray * HitRecord * Vec3 -> (Ray option*Vec3)
+    abstract member Scatter : Ray * HitRecord -> (Ray option*Vec3)

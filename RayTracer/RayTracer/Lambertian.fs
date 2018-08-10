@@ -2,11 +2,10 @@
 open Globals
 open Hitable
 open Ray
-open Tracer
 
 type Lambertian(albedo:Vec3) = 
     interface IMaterial with
-        member this.Scatter(ray:Ray,record:HitRecord,atten:Vec3) : (Ray option*Vec3) =
+        member this.Scatter(ray:Ray,record:HitRecord) : (Ray option*Vec3) =
             let rand = System.Random(int (ray.Direction.Y * 9999999.0))
             let GetDiffuseDirection () =
                 let p = 
