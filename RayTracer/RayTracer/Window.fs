@@ -18,6 +18,9 @@ let DisplayImage (image:Drawing.Image) =
     window.Size <- image.Size
     window.Text <- "RayTracer"
     window.BackgroundImage <- image
+    window.DoubleClick.Add(fun _ ->
+        image.Save("Result.bmp")
+        System.Diagnostics.Process.Start("Result.bmp") |> ignore)
     window.ShowDialog() |> ignore
 
 let CreateImageForTestRay (size : Drawing.Size) (spp : int) (camera:Camera) (objs : (IHitable*IMaterial) list)  : Drawing.Image = 
