@@ -67,6 +67,7 @@
     <Compile Include="Lambertian.fs" />
     <Compile Include="Metal.fs" />
     <Compile Include="LambertianMetal.fs" />
+    <Compile Include="Dielectirc.fs" />
     <Compile Include="Window.fs" />
     <Compile Include="Sphere.fs" />
     <Compile Include="Main.fs" />
