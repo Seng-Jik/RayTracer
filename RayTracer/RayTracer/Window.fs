@@ -5,13 +5,25 @@ open System
 open Globals
 open Hitable
 open Ray
+open Material
+open Tracer
+
 
 let Gamma (col:Vec3) = 
     Vec3(Math.Sqrt(col.X),Math.Sqrt(col.Y),Math.Sqrt(col.Z))
 
 
-let GetScreenColor (ray:Ray) (objs:IHitable list) =
-    Diffuse.GetDiffuseColor ray objs
+let rec GetScreenColor (ray:Ray) (objs:(IHitable*IMaterial) list) depth maxDepth =
+    match Trace ray 0.0000001 Double.MaxValue objs with
+    | Some(record) -> 
+        let scattered = record.Material.Scatter(ray,record.HitRecord,Vec3(0.0,0.0,0.0))
+        match depth with
+        | x when x >= maxDepth -> Vec3(0.0,0.0,0.0)
+        | _ -> 
+            let (ray,atten) = scattered
+            let col = GetScreenColor ray.Value objs (depth+1) maxDepth
+            Vec3(col.X * atten.X,col.Y * atten.Y,col.Z * atten.Z)
+    | None -> Background ray
 
 let DisplayImage (image:Drawing.Image) = 
     use window = new Form()
@@ -20,7 +32,7 @@ let DisplayImage (image:Drawing.Image) =
     window.BackgroundImage <- image
     window.ShowDialog() |> ignore
 
-let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : IHitable list) : Drawing.Image = 
+let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : (IHitable*IMaterial) list) : Drawing.Image = 
     let lowLeftCorner = Vec3(-2.0,-1.0,-1.0)
     let horizontal = Vec3(4.0,0.0,0.0)
     let vertical = Vec3(0.0,2.0,0.0)
@@ -51,7 +63,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (objs : IHitable lis
                                     orginal,
                                     lowLeftCorner + 
                                         horizontal * xTrace + vertical * yTrace)
-                            col <- col + colWeigth * GetScreenColor ray objs
+                            col <- col + colWeigth * GetScreenColor ray objs 0 100
             
                         mtx.WaitOne() |> ignore
                         image.SetPixel(x,y,col |> Gamma |> Vec3ToDrawingColor)

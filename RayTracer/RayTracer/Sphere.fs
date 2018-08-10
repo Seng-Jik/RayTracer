@@ -7,7 +7,7 @@ open System.Collections
 
 type Sphere(center:Vec3,radius:float) =
     interface IHitable with
-        member this.Hit(ray:Ray,tmin:float,tmax:float,objs:IHitable list) : HitRecord option=
+        member this.Hit(ray:Ray,tmin:float,tmax:float) : HitRecord option=
             let oc = ray.Orginal - center
             let a = Vec3.Dot(ray.Direction,ray.Direction)
             let b = 2.0 * Vec3.Dot(oc,ray.Direction)
