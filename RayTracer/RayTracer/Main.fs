@@ -19,7 +19,8 @@ let hitableList : (IHitable*IMaterial) list = [
 
 let from = Vec3(0.0, 3.0, 3.0);
 let lookat = Vec3(0.0, 0.0, -1.0);
-let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),(from - lookat).Length)
+//let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.5,1.)
+let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.0,1.)
 
 let image = hitableList |> CreateImageForTestRay (Drawing.Size(width,height)) 100 camera
 
