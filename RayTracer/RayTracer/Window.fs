@@ -53,7 +53,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (camera:Camera) (obj
                     col <- col + colWeigth * GetRayColor ray objs 0 5
 
                 System.Threading.Interlocked.Increment(renderedPixel) |> ignore
-                if !renderedPixel % 10000 = 0 then
+                if !renderedPixel % 1000 = 0 then
                     printfn "RenderedPixels:%A  Percent:%A"
                                 !renderedPixel
                                 (float !renderedPixel / float (size.Width * size.Height))
