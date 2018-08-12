@@ -50,7 +50,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (camera:Camera) (obj
                     let yTrace = yNorm + random.NextDouble() * yRecip
                     let ray =
                         camera.CreateRay(xTrace,yTrace)
-                    col <- col + colWeigth * GetScreenColor ray objs 0 5
+                    col <- col + colWeigth * GetRayColor ray objs 0 5
 
                 System.Threading.Interlocked.Increment(renderedPixel) |> ignore
                 if !renderedPixel % 10000 = 0 then

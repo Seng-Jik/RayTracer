@@ -30,3 +30,5 @@ type Dielectirc(albedo:Vec3,refIdx:float) =
                 
             (Some(outRay),albedo)
 
+        member this.Emitted with get() = Vec3(0.0,0.0,0.0)
+

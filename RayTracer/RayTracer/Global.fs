@@ -2,8 +2,9 @@
 
 type Vec3 = OpenTK.Vector3d
 
-let Clamp min max x = 
+let Clamp min max (x:float) = 
     match x with
+    | x when System.Double.IsNaN(x) -> 0.0
     | x when x < min -> min
     | x when x > max -> max
     | _ -> x

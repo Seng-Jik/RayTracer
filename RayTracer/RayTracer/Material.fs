@@ -7,6 +7,7 @@ open System
 
 type IMaterial = 
     abstract member Scatter : Ray * HitRecord -> (Ray option*Vec3)
+    abstract Emitted : Vec3 with get
 
 module MaterialFuncs =
     let GetDiffuseDirection (rand:Random) =

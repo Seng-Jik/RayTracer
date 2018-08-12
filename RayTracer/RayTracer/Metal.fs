@@ -14,3 +14,5 @@ type Metal(albedo:Vec3) =
                 (Some(scattered),albedo)
             else
                 (None,albedo)
+
+        member this.Emitted with get() = Vec3(0.0,0.0,0.0)
