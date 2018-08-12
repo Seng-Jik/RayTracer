@@ -53,10 +53,10 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (camera:Camera) (obj
                     col <- col + colWeigth * GetScreenColor ray objs 0 5
 
                 System.Threading.Interlocked.Increment(renderedPixel) |> ignore
-                if renderedPixel.Value % 10000 = 0 then
+                if !renderedPixel % 10000 = 0 then
                     printfn "RenderedPixels:%A  Percent:%A"
-                                renderedPixel.Value
-                                (float renderedPixel.Value / float (size.Width * size.Height))
+                                !renderedPixel
+                                (float !renderedPixel / float (size.Width * size.Height))
                      
                 return (col |> Gamma |> Vec3ToDrawingColor,x,y) })
         let asyncs = Async.Parallel parallelSeq
