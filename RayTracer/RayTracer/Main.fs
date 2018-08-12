@@ -27,7 +27,7 @@ let lookat = Vec3(0.0, 0.0, -1.0);
 //let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.5,1.)
 let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.0,1.)
 
-let image = hitableList |> CreateImageForTestRay (Drawing.Size(width,height)) 250000 camera
+let image = hitableList |> CreateImageForTestRay (Drawing.Size(width,height)) 50000 camera
 //let image = new Bitmap(1024,768)
 Window.DisplayImage image
 
