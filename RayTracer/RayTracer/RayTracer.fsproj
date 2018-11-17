@@ -59,6 +59,7 @@
     <Content Include="packages.config" />
     <Content Include="OpenTK.dll.config" />
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Vector.fs" />
     <Compile Include="Global.fs" />
     <Compile Include="Ray.fs" />
     <Compile Include="Hitable.fs" />
@@ -79,9 +80,6 @@
       <Name>FSharp.Core</Name>
       <AssemblyName>FSharp.Core.dll</AssemblyName>
       <HintPath>$(MSBuildProgramFiles32)\Reference Assemblies\Microsoft\FSharp\.NETFramework\v4.0\$(TargetFSharpCoreVersion)\FSharp.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK">
-      <HintPath>..\packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

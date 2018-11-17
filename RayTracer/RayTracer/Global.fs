@@ -1,6 +1,13 @@
 ﻿module Globals
 
-type Vec3 = OpenTK.Vector3d
+type Vec3 = Vector.Vec3
+open Vector
+
+let Vec3 (x,y,z) = {
+    X = x
+    Y = y
+    Z = z }
+
 
 let Clamp min max (x:float) = 
     match x with

@@ -9,9 +9,9 @@ type Sphere(center:Vec3,radius:float) =
     interface IHitable with
         member this.Hit(ray:Ray,tmin:float,tmax:float) : HitRecord option=
             let oc = ray.Orginal - center
-            let a = Vec3.Dot(ray.Direction,ray.Direction)
-            let b = 2.0 * Vec3.Dot(oc,ray.Direction)
-            let c = Vec3.Dot(oc,oc) - radius * radius
+            let a = Vector.Dot(ray.Direction,ray.Direction)
+            let b = 2.0 * Vector.Dot(oc,ray.Direction)
+            let c = Vector.Dot(oc,oc) - radius * radius
             let disc = b*b-4.0*a*c
 
             match disc < 0.0 with

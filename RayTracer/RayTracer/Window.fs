@@ -43,7 +43,7 @@ let CreateImageForTestRay (size : Drawing.Size) (spp : int) (camera:Camera) (obj
                 let xNorm = float x / float size.Width
                 let yNorm = 1.0 - float y / float size.Height
 
-                let mutable col = Vec3.Zero
+                let mutable col = Vector.Zero
 
                 for _ in seq {0..spp - 1} do
                     let xTrace = xNorm + random.NextDouble() * xRecip

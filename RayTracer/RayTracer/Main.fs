@@ -3,10 +3,10 @@
 open System
 open Globals
 open Hitable
-open Window
 open Material
 open Camera
 open System.Drawing
+open Window
 
 let (width,height) = (128*6,72*5)
 
@@ -27,7 +27,7 @@ let lookat = Vec3(0.0, 0.0, -1.0);
 //let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.5,1.)
 let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.0,1.)
 
-let image = hitableList |> CreateImageForTestRay (Drawing.Size(width,height)) 50000 camera
+let image = hitableList |> CreateImageForTestRay (Drawing.Size(width,height)) 5 camera
 //let image = new Bitmap(1024,768)
 Window.DisplayImage image
 

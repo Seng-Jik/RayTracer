@@ -9,15 +9,15 @@ type Dielectirc(albedo:Vec3,refIdx:float) =
         member this.Scatter(ray:Ray,record:HitRecord) : (Ray option*Vec3) =
             let reflect = lazy (Reflect ray.Direction record.Normal)
             let (normal,niNo,cos) =
-                match Vec3.Dot(ray.Direction,record.Normal) > 0.0 with
+                match Vector.Dot(ray.Direction,record.Normal) > 0.0 with
                 | true -> (
                             -record.Normal,
                             refIdx,
-                            refIdx * Vec3.Dot(ray.DirectionNorm,record.Normal))
+                            refIdx * Vector.Dot(ray.DirectionNorm,record.Normal))
                 | false -> (
                             record.Normal,
                             1.0/refIdx,
-                            -Vec3.Dot(ray.DirectionNorm, record.Normal))
+                            -Vector.Dot(ray.DirectionNorm, record.Normal))
 
             let (reflectProb,refracted) = match Refract ray.Direction normal niNo with
                                             | Some(refracted) -> (Schlick cos refIdx,Some(refracted))
