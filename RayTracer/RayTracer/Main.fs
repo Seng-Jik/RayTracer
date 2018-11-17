@@ -23,16 +23,16 @@ let from = Vec3(0.0, 3.0, 3.0);
 let lookat = Vec3(0.0, 0.0, -1.0);
 let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.0,1.)
 
-let spp = 10
+let spp = 100
 
 let rnd = Random()
 let image = 
-    List.init spp (fun _ -> rnd.Next())    
-    |> List.mapi (fun index seed ->
+    Array.init spp (fun _ -> rnd.Next())    
+    |> Array.Parallel.mapi (fun index seed ->
         printfn "Tracing %d" index
         hitableList
         |> Render (System.Drawing.Size(width,height)) camera seed)
-    |> List.reduce ReduceImage
+    |> Array.reduce ReduceImage
     |> ToBitmap
 
 Window.DisplayImage image
