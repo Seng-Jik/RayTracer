@@ -32,7 +32,7 @@ let RenderParallel width height spp hitableList camera =
                         |> ReduceImage
                         |> ToBitmap
                     do! Async.SwitchToContext ctx
-                    printfn "Traced %d BagCount:%d" index imgs.Count
+                    printfn "Traced %d Traced Spp %d" index imgs.Count
                     window.BackgroundImage <- bmp })
         |> Async.Parallel
         |> Async.Ignore
