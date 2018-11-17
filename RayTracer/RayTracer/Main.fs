@@ -7,7 +7,7 @@ open Material
 open Camera
 open Window
 
-let (width,height) = (128*4,72*4)
+let (width,height) = (128*12,72*12)
 
 let light = 10.0
 
@@ -34,6 +34,6 @@ let from = Vec3(0.0, 3.0, 7.0);
 let lookat = Vec3(0.0, 0.5, -1.0);
 let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.0,1.)
 
-let spp = 50000
+let spp = 100000
 
 ParallelRenderer.RenderParallel width height spp hitableList camera

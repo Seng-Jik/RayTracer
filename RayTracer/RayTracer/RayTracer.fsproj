@@ -60,7 +60,7 @@
     <Content Include="OpenTK.dll.config" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Vector.fs" />
-    <Compile Include="Global.fs" />
+    <Compile Include="Globals.fs" />
     <Compile Include="Ray.fs" />
     <Compile Include="Hitable.fs" />
     <Compile Include="Material.fs" />

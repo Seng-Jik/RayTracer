@@ -28,11 +28,10 @@ let ToBitmap i =
         bmp.SetPixel(x,y,Vec3ToDrawingColor (px |> Gamma)))
     bmp
 
-let ReduceImage (imgs : Image[]) =
+let ReduceImage compressRate (imgs : Image[]) =
     let w,h =
         (Array.head imgs).Width,
         (Array.head imgs).Height
-    let imgCount = Array.length imgs
     {
         Width = w
         Height = h
@@ -40,7 +39,7 @@ let ReduceImage (imgs : Image[]) =
             Seq.init (imgs.Length) (fun i ->
                 imgs.[i].Pixels.[pxid])
             |> Seq.reduce (+)
-            |> (*) (1.0 / float imgCount)) }
+            |> (*) (1.0/compressRate)) }
 
 let DisplayImage (image:Drawing.Image) = 
     use window = new Form()
@@ -52,22 +51,20 @@ let DisplayImage (image:Drawing.Image) =
         System.Diagnostics.Process.Start("Result.bmp") |> ignore)
     window.ShowDialog() |> ignore
 
-let Render (size : Drawing.Size) (camera:Camera) (random:System.Random) (objs : (IHitable*IMaterial) list) = 
+let Render (size : Drawing.Size) (camera:Camera) (random:System.Random) colWeight target (objs : (IHitable*IMaterial) list)  = 
     let (xRecip,yRecip) = (1.0 / float size.Width,1.0 / float size.Height)
-    let img = {
-        Width = size.Width
-        Height = size.Height
-        Pixels = [|
-            for pxid in 0..size.Width*size.Height-1 ->
-                let y = pxid / size.Width
-                let x = pxid % size.Width
-                let xNorm = float x / float size.Width
-                let yNorm = 1.0 - float y / float size.Height
+    for pxid in 0..size.Width*size.Height-1 do
+        let y = pxid / size.Width
+        let x = pxid % size.Width
+        let xNorm = float x / float size.Width
+        let yNorm = 1.0 - float y / float size.Height
 
-                let xTrace = xNorm + random.NextDouble() * xRecip
-                let yTrace = yNorm + random.NextDouble() * yRecip
-                let ray =
-                    camera.CreateRay (xTrace,yTrace) random
-                GetRayColor ray objs 0 5 random |]}
-    img
+        let xTrace = xNorm + random.NextDouble() * xRecip
+        let yTrace = yNorm + random.NextDouble() * yRecip
+        let ray =
+            camera.CreateRay (xTrace,yTrace) random
+        target.Pixels.[pxid] <-
+            target.Pixels.[pxid] + (
+                GetRayColor ray objs 0 5 random
+                |> (*) colWeight)
 

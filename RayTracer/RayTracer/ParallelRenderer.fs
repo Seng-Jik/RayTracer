@@ -3,6 +3,7 @@
 open System.Windows.Forms
 open System
 open Window
+open Globals
 
 let RenderParallel width height spp hitableList camera =
     let size = System.Drawing.Size(width,height)
@@ -15,18 +16,27 @@ let RenderParallel width height spp hitableList camera =
         window.BackgroundImage.Save("Result.bmp")
         System.Diagnostics.Process.Start("Result.bmp") |> ignore)
 
-    let imgs = System.Collections.Concurrent.ConcurrentBag()
+    let colWeight = 1.0 / float spp
+
+    let tracedSpp = ref 0
+
+    let imgs = Array.init System.Environment.ProcessorCount (fun x ->
+        {
+            Width = width
+            Height = height
+            Pixels = Array.init (width*height) (fun x -> Vec3(0.0,0.0,0.0)) })
+
     let rndSeed = Random()
     window.Shown.Add (fun _ ->
-        Array.init System.Environment.ProcessorCount (fun index ->
+        Array.init System.Environment.ProcessorCount (fun cpuIndex ->
             async {
                 let rnd = Random(rndSeed.Next())
                 do! Async.SwitchToThreadPool()
-                for _ in 0..spp / System.Environment.ProcessorCount do
+                for i in 0..spp / System.Environment.ProcessorCount do
                     hitableList
-                    |> Window.Render (System.Drawing.Size(width,height)) camera rnd
-                    |> imgs.Add
-                    printfn "Traced %d Traced Spp %d" index imgs.Count })
+                    |> Window.Render (System.Drawing.Size(width,height)) camera rnd colWeight (imgs.[cpuIndex])
+                    let nowTraced = System.Threading.Interlocked.Increment tracedSpp
+                    printfn "CPU %d Traced Spp %d" cpuIndex nowTraced })
         |> Async.Parallel
         |> Async.Ignore
         |> Async.StartImmediate)
@@ -35,12 +45,14 @@ let RenderParallel width height spp hitableList camera =
         async {
             while true do
                 do! Async.Sleep 10000
-                printfn "Refreshing Window... %d Spp Traced." (imgs.Count)
+                printfn "Refreshing Window..."
                 let bmp =
                         imgs
-                        |> Seq.toArray
-                        |> ReduceImage
+                        |> ReduceImage (float !tracedSpp / float spp)
                         |> ToBitmap
-                window.BackgroundImage <- bmp }
+                if window.BackgroundImage <> null then
+                    window.BackgroundImage.Dispose()
+                window.BackgroundImage <- bmp
+                do! Async.Sleep 100000 }
             |> Async.StartImmediate)
     Application.Run(window)
