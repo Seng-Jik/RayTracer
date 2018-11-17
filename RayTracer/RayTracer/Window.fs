@@ -28,6 +28,16 @@ let ToBitmap i =
         bmp.SetPixel(x,y,Vec3ToDrawingColor (px |> Gamma)))
     bmp
 
+let ReduceImage a b =
+    assert (a.Width = b.Width)
+    assert (a.Height = b.Height)
+    let npx =
+        Array.map2 (fun x y -> (x + y) * 0.5) a.Pixels b.Pixels
+    {
+        Width = a.Width
+        Height = b.Height
+        Pixels = npx }
+
 let DisplayImage (image:Drawing.Image) = 
     use window = new Form()
     window.Size <- image.Size
@@ -38,7 +48,7 @@ let DisplayImage (image:Drawing.Image) =
         System.Diagnostics.Process.Start("Result.bmp") |> ignore)
     window.ShowDialog() |> ignore
 
-let CreateImageForTestRay (size : Drawing.Size) (camera:Camera) rndID (objs : (IHitable*IMaterial) list)  = 
+let Render (size : Drawing.Size) (camera:Camera) rndID (objs : (IHitable*IMaterial) list)  = 
     let (xRecip,yRecip) = (1.0 / float size.Width,1.0 / float size.Height)
     let img = {
         Width = size.Width

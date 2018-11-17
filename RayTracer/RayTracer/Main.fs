@@ -10,23 +10,30 @@ open Window
 let (width,height) = (128*6,72*5)
 
 let light = Lambertian(Vec3(0.8, 0.3, 0.3))
-light.SetEmitted(Vec3(8.0,10.0,12.0))
+light.SetEmitted(Vec3(0.1,0.1,0.1))
 
 let hitableList : (IHitable*IMaterial) list = [
     (Sphere(Vec3(0.0,0.0,-1.0),0.5) :> IHitable, light :> IMaterial)
     (Sphere(Vec3(-1.0,0.0,-1.0),0.5) :> IHitable,LambertianMetal(Vec3(0.8,0.6,0.2),0.1) :> IMaterial)
     (Sphere(Vec3(1.0,0.0,-1.0),0.5) :> IHitable,Dielectirc(Vec3(1.0,1.0,1.0),1.5) :> IMaterial)
     
-    (Sphere(Vec3(0.0,-110.5,-1.),100.0) :> IHitable,Lambertian(Vec3(0.8,0.8,0.0)) :> IMaterial)]
+    (Sphere(Vec3(0.0,-100.5,-1.),100.0) :> IHitable,Lambertian(Vec3(0.8,0.8,0.0)) :> IMaterial)]
 
 let from = Vec3(0.0, 3.0, 3.0);
 let lookat = Vec3(0.0, 0.0, -1.0);
-//let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.5,1.)
 let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.0,1.)
 
-let image = hitableList 
-            |> CreateImageForTestRay (Drawing.Size(width,height)) camera 12345
-            |> ToBitmap
+let spp = 10
+
+let rnd = Random()
+let image = 
+    List.init spp (fun _ -> rnd.Next())    
+    |> List.mapi (fun index seed ->
+        printfn "Tracing %d" index
+        hitableList
+        |> Render (System.Drawing.Size(width,height)) camera seed)
+    |> List.reduce ReduceImage
+    |> ToBitmap
 
 Window.DisplayImage image
 
