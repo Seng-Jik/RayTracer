@@ -23,47 +23,28 @@ let DisplayImage (image:Drawing.Image) =
         System.Diagnostics.Process.Start("Result.bmp") |> ignore)
     window.ShowDialog() |> ignore
 
-let CreateImageForTestRay (size : Drawing.Size) (spp : int) (camera:Camera) (objs : (IHitable*IMaterial) list)  : Drawing.Image = 
+let CreateImageForTestRay (size : Drawing.Size) (camera:Camera) (objs : (IHitable*IMaterial) list) = 
     let image = new Drawing.Bitmap(size.Width,size.Height)
 
     let (xRecip,yRecip) = (1.0 / float size.Width,1.0 / float size.Height)
 
-    let colWeigth = 1.0 / float spp
+    for i in 0..size.Height-1 do
+        for j in 0..size.Width-1 do
+            let pxid = i*size.Width+j
+            let randomSeed = System.Random(pxid)
+            let random = System.Random(randomSeed.Next())
+            let y = pxid / size.Width
+            let x = pxid % size.Width
+            let xNorm = float x / float size.Width
+            let yNorm = 1.0 - float y / float size.Height
 
-    let mutable renderedPixel = ref 0;
+            let xTrace = xNorm + random.NextDouble() * xRecip
+            let yTrace = yNorm + random.NextDouble() * yRecip
+            let ray =
+                camera.CreateRay(xTrace,yTrace)
+            let col = GetRayColor ray objs 0 5
 
+            image.SetPixel(x,y,Vec3ToDrawingColor (Gamma col))
 
-    async{
-        let parallelSeq = Seq.init (size.Height*size.Width) (fun pxid ->
-            async {
-                let randomSeed = System.Random(pxid)
-                let random = System.Random(randomSeed.Next())
-                let y = pxid / size.Width
-                let x = pxid % size.Width
-                let xNorm = float x / float size.Width
-                let yNorm = 1.0 - float y / float size.Height
-
-                let mutable col = Vector.Zero
-
-                for _ in seq {0..spp - 1} do
-                    let xTrace = xNorm + random.NextDouble() * xRecip
-                    let yTrace = yNorm + random.NextDouble() * yRecip
-                    let ray =
-                        camera.CreateRay(xTrace,yTrace)
-                    col <- col + colWeigth * GetRayColor ray objs 0 5
-
-                System.Threading.Interlocked.Increment(renderedPixel) |> ignore
-                if !renderedPixel % 100 = 0 then
-                    printfn "RenderedPixels:%A  Percent:%A"
-                                !renderedPixel
-                                (float !renderedPixel / float (size.Width * size.Height))
-                     
-                return (col |> Gamma |> Vec3ToDrawingColor,x,y) })
-        let asyncs = Async.Parallel parallelSeq
-        let! pixels = asyncs
-        printfn "Applying Pixels..."
-        pixels |> Array.iter (fun (col,x,y) ->
-            image.SetPixel(x,y,col))
-    } |> Async.RunSynchronously
-    upcast image
+    image
 
