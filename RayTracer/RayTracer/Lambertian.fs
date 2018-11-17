@@ -9,8 +9,7 @@ type Lambertian(albedo:Vec3) =
     member this.SetEmitted (col:Vec3) = emitted <- col
 
     interface IMaterial with
-        member this.Scatter(ray:Ray,record:HitRecord) : (Ray option*Vec3) =
-            let rand = System.Random(int (ray.Direction.Y * 9999999.0))
+        member this.Scatter(ray:Ray,record:HitRecord) rand : (Ray option*Vec3) =
             let target = record.Position + record.Normal + GetDiffuseDirection rand
             let ray = Ray(record.Position,target - record.Position)
             (Some(ray),albedo)

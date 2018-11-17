@@ -19,8 +19,7 @@ type Camera(position:Vec3,lookAt:Vec3,up:Vec3,vfov:float,aspect:float,r:float,fo
     let horizontal = 2.0 * halfWidth * u * focusDist
     let vertical = 2.0 * halfHeight * v * focusDist
 
-    member this.CreateRay(u:float,v:float) = 
-        let rand = System.Random(int(u*v*9999999.0))
+    member this.CreateRay(u:float,v:float) rand = 
         let rd = radius * GetDiffuseDirection(rand)
         let t = rd.X * u + rd.Y * v
         let offset = Vec3(t,t,t)

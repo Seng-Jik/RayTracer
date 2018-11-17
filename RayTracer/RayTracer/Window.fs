@@ -28,15 +28,19 @@ let ToBitmap i =
         bmp.SetPixel(x,y,Vec3ToDrawingColor (px |> Gamma)))
     bmp
 
-let ReduceImage a b =
-    assert (a.Width = b.Width)
-    assert (a.Height = b.Height)
-    let npx =
-        Array.map2 (fun x y -> (x + y) * 0.5) a.Pixels b.Pixels
+let ReduceImage (imgs : Image[]) =
+    let w,h =
+        (Array.head imgs).Width,
+        (Array.head imgs).Height
+    let imgCount = Array.length imgs
     {
-        Width = a.Width
-        Height = b.Height
-        Pixels = npx }
+        Width = w
+        Height = h
+        Pixels = Array.init (w*h) (fun pxid ->
+            Seq.init (imgs.Length) (fun i ->
+                imgs.[i].Pixels.[pxid])
+            |> Seq.reduce (+)
+            |> (*) (1.0 / float imgCount)) }
 
 let DisplayImage (image:Drawing.Image) = 
     use window = new Form()
@@ -48,15 +52,13 @@ let DisplayImage (image:Drawing.Image) =
         System.Diagnostics.Process.Start("Result.bmp") |> ignore)
     window.ShowDialog() |> ignore
 
-let Render (size : Drawing.Size) (camera:Camera) rndID (objs : (IHitable*IMaterial) list)  = 
+let Render (size : Drawing.Size) (camera:Camera) (random:System.Random) (objs : (IHitable*IMaterial) list) = 
     let (xRecip,yRecip) = (1.0 / float size.Width,1.0 / float size.Height)
     let img = {
         Width = size.Width
         Height = size.Height
         Pixels = [|
             for pxid in 0..size.Width*size.Height-1 ->
-                let randomSeed = System.Random(pxid * rndID)
-                let random = System.Random(randomSeed.Next())
                 let y = pxid / size.Width
                 let x = pxid % size.Width
                 let xNorm = float x / float size.Width
@@ -65,7 +67,7 @@ let Render (size : Drawing.Size) (camera:Camera) rndID (objs : (IHitable*IMateri
                 let xTrace = xNorm + random.NextDouble() * xRecip
                 let yTrace = yNorm + random.NextDouble() * yRecip
                 let ray =
-                    camera.CreateRay(xTrace,yTrace)
-                GetRayColor ray objs 0 5 |]}
+                    camera.CreateRay (xTrace,yTrace) random
+                GetRayColor ray objs 0 5 random |]}
     img
 

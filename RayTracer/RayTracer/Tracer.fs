@@ -25,12 +25,12 @@ let Trace (ray : Ray) (tmin:float) (tmax:float) (objs : (IHitable*IMaterial) lis
         | None -> ()
     record
 
-let rec GetRayColor (ray:Ray) (objs:(IHitable*IMaterial) list) depth maxDepth : Vec3 =
+let rec GetRayColor (ray:Ray) (objs:(IHitable*IMaterial) list) depth maxDepth rand : Vec3 =
     match Trace ray 0.0000001 Double.MaxValue objs with
     | Some(record) -> 
-        let (ray,atten) = record.Material.Scatter(ray,record.HitRecord)
+        let (ray,atten) = record.Material.Scatter (ray,record.HitRecord) rand
         if ray.IsSome && depth < maxDepth then
-            let col = GetRayColor ray.Value objs (depth+1) maxDepth
+            let col = GetRayColor ray.Value objs (depth+1) maxDepth rand
             Vec3(col.X * atten.X,col.Y * atten.Y,col.Z * atten.Z) + record.Material.Emitted
         else
             record.Material.Emitted

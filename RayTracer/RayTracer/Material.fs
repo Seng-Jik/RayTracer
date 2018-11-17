@@ -6,7 +6,7 @@ open Globals
 open System
 
 type IMaterial = 
-    abstract member Scatter : Ray * HitRecord -> (Ray option*Vec3)
+    abstract member Scatter : Ray * HitRecord -> Random-> (Ray option*Vec3)
     abstract Emitted : Vec3 with get
 
 module MaterialFuncs =

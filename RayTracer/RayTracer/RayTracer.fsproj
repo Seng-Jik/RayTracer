@@ -72,6 +72,7 @@
     <Compile Include="Camera.fs" />
     <Compile Include="Window.fs" />
     <Compile Include="Sphere.fs" />
+    <Compile Include="ParallelRenderer.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>

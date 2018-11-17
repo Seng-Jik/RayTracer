@@ -6,7 +6,7 @@ open Material.MaterialFuncs
 
 type Dielectirc(albedo:Vec3,refIdx:float) =
     interface IMaterial with
-        member this.Scatter(ray:Ray,record:HitRecord) : (Ray option*Vec3) =
+        member this.Scatter(ray:Ray,record:HitRecord) rand : (Ray option*Vec3) =
             let reflect = lazy (Reflect ray.Direction record.Normal)
             let (normal,niNo,cos) =
                 match Vector.Dot(ray.Direction,record.Normal) > 0.0 with
@@ -23,7 +23,6 @@ type Dielectirc(albedo:Vec3,refIdx:float) =
                                             | Some(refracted) -> (Schlick cos refIdx,Some(refracted))
                                             | None -> (1.0,None)
 
-            let rand = System.Random(int(record.Position.X * record.Position.Y * record.Position.Z * 999999.0))
             let outRay = match rand.NextDouble() < reflectProb with
                             | true -> Ray(record.Position, reflect.Force())
                             | false -> Ray(record.Position,refracted.Value)

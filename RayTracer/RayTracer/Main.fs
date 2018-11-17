@@ -7,7 +7,7 @@ open Material
 open Camera
 open Window
 
-let (width,height) = (128*6,72*5)
+let (width,height) = (128*4,72*4)
 
 let light = Lambertian(Vec3(0.8, 0.3, 0.3))
 light.SetEmitted(Vec3(0.1,0.1,0.1))
@@ -23,17 +23,6 @@ let from = Vec3(0.0, 3.0, 3.0);
 let lookat = Vec3(0.0, 0.0, -1.0);
 let camera = Camera(from,lookat,Vec3(0.0,1.0,0.0),20.0,(float width/float height),0.0,1.)
 
-let spp = 100
+let spp = 50000
 
-let rnd = Random()
-let image = 
-    Array.init spp (fun _ -> rnd.Next())    
-    |> Array.Parallel.mapi (fun index seed ->
-        printfn "Tracing %d" index
-        hitableList
-        |> Render (System.Drawing.Size(width,height)) camera seed)
-    |> Array.reduce ReduceImage
-    |> ToBitmap
-
-Window.DisplayImage image
-
+ParallelRenderer.RenderParallel width height spp hitableList camera

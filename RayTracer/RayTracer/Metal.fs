@@ -6,7 +6,7 @@ open Material.MaterialFuncs
 
 type Metal(albedo:Vec3) = 
     interface IMaterial with
-        member this.Scatter(ray:Ray,record:HitRecord) : (Ray option*Vec3) =
+        member this.Scatter(ray:Ray,record:HitRecord) rand : (Ray option*Vec3) =
             let reflected = Reflect ray.DirectionNorm record.Normal
             let scattered = Ray(record.Position,reflected)
 
