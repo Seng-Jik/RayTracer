@@ -11,30 +11,36 @@ let RenderParallel width height spp hitableList camera =
     window.Text <- "RayTracer"
     window.BackColor <- System.Drawing.Color.Black
 
+    window.DoubleClick.Add(fun _ ->
+        window.BackgroundImage.Save("Result.bmp")
+        System.Diagnostics.Process.Start("Result.bmp") |> ignore)
+
     let imgs = System.Collections.Concurrent.ConcurrentBag()
     let rndSeed = Random()
     window.Shown.Add (fun _ ->
         Array.init System.Environment.ProcessorCount (fun index ->
             async {
                 let rnd = Random(rndSeed.Next())
-                
-                for i in 0..spp / System.Environment.ProcessorCount do
-                    let ctx = System.Threading.SynchronizationContext.Current
-                    do! Async.SwitchToThreadPool()
-                    printfn "Tracing %d " index
+                do! Async.SwitchToThreadPool()
+                for _ in 0..spp / System.Environment.ProcessorCount do
                     hitableList
                     |> Window.Render (System.Drawing.Size(width,height)) camera rnd
                     |> imgs.Add
+                    printfn "Traced %d Traced Spp %d" index imgs.Count })
+        |> Async.Parallel
+        |> Async.Ignore
+        |> Async.StartImmediate)
 
-                    let bmp =
+    window.Shown.Add (fun _ ->
+        async {
+            while true do
+                do! Async.Sleep 10000
+                printfn "Refreshing Window... %d Spp Traced." (imgs.Count)
+                let bmp =
                         imgs
                         |> Seq.toArray
                         |> ReduceImage
                         |> ToBitmap
-                    do! Async.SwitchToContext ctx
-                    printfn "Traced %d Traced Spp %d" index imgs.Count
-                    window.BackgroundImage <- bmp })
-        |> Async.Parallel
-        |> Async.Ignore
-        |> Async.StartImmediate)
+                window.BackgroundImage <- bmp }
+            |> Async.StartImmediate)
     Application.Run(window)
