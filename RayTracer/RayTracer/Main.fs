@@ -5,7 +5,6 @@ open Globals
 open Hitable
 open Material
 open Camera
-open System.Drawing
 open Window
 
 let (width,height) = (128*6,72*5)
@@ -18,9 +17,7 @@ let hitableList : (IHitable*IMaterial) list = [
     (Sphere(Vec3(-1.0,0.0,-1.0),0.5) :> IHitable,LambertianMetal(Vec3(0.8,0.6,0.2),0.1) :> IMaterial)
     (Sphere(Vec3(1.0,0.0,-1.0),0.5) :> IHitable,Dielectirc(Vec3(1.0,1.0,1.0),1.5) :> IMaterial)
     
-    (Sphere(Vec3(0.0,-100.5,-1.),100.0) :> IHitable,Lambertian(Vec3(0.8,0.8,0.0)) :> IMaterial)
-    (Sphere(Vec3(-101.5,0.0,-1.),100.0) :> IHitable,Lambertian(Vec3(0.0,0.8,0.8)) :> IMaterial)
-    (Sphere(Vec3(101.5,0.0,-1.),100.0) :> IHitable,Lambertian(Vec3(0.0,0.8,0.8)) :> IMaterial)]
+    (Sphere(Vec3(0.0,-100.5,-1.),100.0) :> IHitable,Lambertian(Vec3(0.8,0.8,0.0)) :> IMaterial)]
 
 let from = Vec3(0.0, 3.0, 3.0);
 let lookat = Vec3(0.0, 0.0, -1.0);

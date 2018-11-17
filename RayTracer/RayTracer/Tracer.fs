@@ -11,9 +11,8 @@ type TraceRecord = {
     Material : IMaterial }
 
 let Background (ray:Ray) =
-    (*let t = 0.5 * ray.DirectionNorm.Y + 1.0
-    (1.0 - t) * Vec3(1.0,1.0,1.0) + t * Vec3(0.5,0.7,1.0)*)
-    Vec3(0.0,0.0,0.0)
+    let t = 0.5 * ray.DirectionNorm.Y + 1.0
+    (1.0 - t) * Vec3(1.0,1.0,1.0) + t * Vec3(0.5,0.7,1.0)
 
 let Trace (ray : Ray) (tmin:float) (tmax:float) (objs : (IHitable*IMaterial) list) : TraceRecord option =
     let mutable closest = tmax
