@@ -5,6 +5,8 @@ open Ray
 open Material.MaterialFuncs
 
 type Dielectirc(albedo:Vec3,refIdx:float) =
+    let mutable emitted = Vec3(0.0,0.0,0.0)
+    member this.SetEmitted (col:Vec3) = emitted <- col
     interface IMaterial with
         member this.Scatter(ray:Ray,record:HitRecord) rand : (Ray option*Vec3) =
             let reflect = lazy (Reflect ray.Direction record.Normal)
@@ -29,5 +31,4 @@ type Dielectirc(albedo:Vec3,refIdx:float) =
                 
             (Some(outRay),albedo)
 
-        member this.Emitted with get() = Vec3(0.0,0.0,0.0)
-
+        member this.Emitted with get() = emitted

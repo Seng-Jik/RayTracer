@@ -14,10 +14,10 @@ let light = 10.0
 let light1 = Lambertian(Vec3(0.0, 0.3, 0.3))
 light1.SetEmitted(Vec3(0.0,light,0.0))
 
-let light2 = Lambertian(Vec3(0.8, 0.3, 0.3))
+let light2 = Metal(Vec3(0.8, 0.3, 0.3))
 light2.SetEmitted(Vec3(light,0.0,0.0))
 
-let light3 = Lambertian(Vec3(0.8, 0.3, 0.3))
+let light3 = Dielectirc(Vec3(0.0,0.5,0.5),2.5)
 light3.SetEmitted(Vec3(0.0,0.0,light))
 
 let hitableList : (IHitable*IMaterial) list = [
